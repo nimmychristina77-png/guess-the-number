@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Guess The Number</title>
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+        <div class="floating-shapes">
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+        </div>
+        <div class="card">
+            <h1>Guess The Number</h1>
+            <div class="controls">
+                <div class="stack">
+                    <div class="row">
+                        <input id="guessnumber" type="number" min="1" max="100" placeholder="Enter a number between 1 and 100">
+                        <button id="CheckBtn">Check</button>
+                    </div>
+                    <div class="row">
+                        <select id="difficulty">
+                            <option value="easy">Easy (1-50)</option>
+                            <option value="medium" selected>Medium (1-100)</option>
+                            <option value="hard">Hard (1-200)</option>
+                        </select>
+                        <button id="hintBtn" class="ghost">Hint</button>
+                        <button id="resetBtn" class="ghost">New Game</button>
+                    </div>
+                </div>
+            </div>
+            <p class="subtitle">Guess The Number. Press <span style="font-weight:700">.</span> to focus the input.</p>
+            <p id="result">Enter a number and press Check.</p>
+            <div class="meta">
+                <div>Range: <strong id="rangelabel">1 - 100</strong> <span class="pill" id="difficultyLabel">Medium</span></div>
+                <div>Attempts left: <strong id="attemptsLeft">10</strong>| Hints left: <strong id="hintsLeft">1</strong></div>
+                <div>Guesses: <div id="guessList" class="list"></div></div>
+            </div>
+            <p id="score">Score: 10</p>
+            <p id="highscore">Best: <span id="bestValue">0</span></p>
+            <svg id="trophy" class="trophy" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="#FFD166" d="M6 2h12v2a4 4 0 0 1-4 4h-4A4 4 0 0 1 6 4V2z"/><path fill="#F4A261" d="M8 8v2a6 6 0 0 0 6 6v4H10v2h4v-2h-4v-4a6 6 0 0 0 6-6V8h-2V8h-2v2a4 4 0 0 1-4 4 4 4 0 0 1-4-4V8H8z"/></svg>
+
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+        <script src="script.js"></script>
+    </body>
+</html>
