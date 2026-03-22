@@ -97,19 +97,22 @@ function playVictorySound(){
     }
 }
 
-function endGame(message){
+function endGame(message, isWin = true){
     result.textContent = message;
-    result.classList.add('celebrate');
     checkBtn.disabled = true;
     input.disabled = true;
     hintBtn.disabled = true;
-    fireConfetti();
-    playVictorySound();
-    trophy.classList.add('show');
-    updateHighScoreIfNeeded();
-    setTimeout(() =>
-        result.classList.remove('celebrate'), 1200
-    );
+    
+    if (isWin) {
+        result.classList.add('celebrate');
+        fireConfetti();
+        playVictorySound();
+        trophy.classList.add('show');
+        updateHighScoreIfNeeded();
+        setTimeout(() =>
+            result.classList.remove('celebrate'), 1200
+        );
+    }
     setTimeout(() => {
         trophy.classList.remove('show');
         resetGame();
@@ -165,7 +168,7 @@ function check(){
 
     if (guess === rand){
         result.textContent = 'Your guess is right! The number was ' + rand + '.';
-        endGame('You won! Final Score: ' + tot);
+        endGame('You won! Final Score: ' + tot, true);
         return;
     }
     tot -= 1;
@@ -180,7 +183,7 @@ function check(){
     updateMeta();
 
     if (tot <= 0){
-        endGame('Game over. The correct number was ' + rand + '.');
+        endGame('Game over. The correct number was ' + rand + '.', false);
     }
 }
 
