@@ -3,21 +3,57 @@
 <head>
     <meta charset="utf-8">
     <title>Guess The Number</title>
+    <meta name="description" content="A premium number guessing game with timer, leaderboard, sound effects, and multiplayer mode.">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
     <div class="ambient-glow"></div>
-    
+
+    <!-- Sound Toggle -->
+    <button id="soundToggle" class="sound-toggle" aria-label="Toggle sound" title="Toggle Sound">
+        <svg id="soundOnIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+        </svg>
+        <svg id="soundOffIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+            <line x1="23" y1="9" x2="17" y2="15"/>
+            <line x1="17" y1="9" x2="23" y2="15"/>
+        </svg>
+    </button >
+ 
     <main class="game-container">
         <header class="game-header">
             <div class="header-line"></div>
             <h1>Guess The Number</h1>
             <p class="tagline">A game of intuition and chance</p>
         </header>
+
+        <!-- Player Setup -->
+        <section class="player-setup" id="playerSetup">
+            <label class="label-subtle" for="playerNameInput">Your Name</label>
+            <div class="player-input-row">
+                <input
+                    id="playerNameInput"
+                    type="text"
+                    maxlength="18"
+                    placeholder="Enter your name…"
+                    autocomplete="off"
+                    aria-label="Player name"
+                >
+                <button id="leaderboardBtn" class="btn-ghost btn-icon" aria-label="View leaderboard" title="Leaderboard">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>
+                    </svg>
+                    <span>Board</span>
+                </button>
+            </div>
+        </section>
 
         <section class="game-board">
             <div class="difficulty-selector">
@@ -27,6 +63,14 @@
                     <button class="seg-btn active" data-mode="medium">Medium</button>
                     <button class="seg-btn" data-mode="hard">Hard</button>
                 </div>
+            </div>
+
+            <!-- Timer -->
+            <div class="timer-zone" id="timerZone">
+                <div class="timer-bar-track">
+                    <div class="timer-bar-fill" id="timerBarFill"></div>
+                </div>
+                <span class="timer-label" id="timerLabel">&#9201; 60s</span>
             </div>
 
             <div class="range-display">
@@ -43,11 +87,12 @@
                     type="number" 
                     min="1" 
                     max="100" 
-                    placeholder="Enter your guess"
+                    placeholder="Press Start to play"
                     autocomplete="off"
                     aria-label="Your guess"
+                    disabled
                 >
-                <button id="CheckBtn" class="btn-primary">
+                <button id="CheckBtn" class="btn-primary" disabled>
                     <span>Reveal</span>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="10"/>
@@ -57,7 +102,7 @@
             </div>
 
             <div class="secondary-actions">
-                <button id="hintBtn" class="btn-ghost">
+                <button id="hintBtn" class="btn-ghost" disabled>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
                     </svg>
@@ -73,6 +118,14 @@
                     New Game
                 </button>
             </div>
+
+            <!-- Start Game Button -->
+            <button id="startBtn" class="btn-start">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+                Start Game
+            </button>
         </section>
 
         <section class="feedback-zone">
@@ -115,6 +168,7 @@
         </footer>
     </main>
 
+    <!-- Victory Overlay -->
     <div class="victory-overlay" id="victoryOverlay">
         <div class="victory-content">
             <div class="victory-icon">
@@ -125,6 +179,29 @@
             <h2 class="victory-title">Magnificent</h2>
             <p class="victory-number">The number was <strong id="victoryNumber">42</strong></p>
             <p class="victory-score">Final Score: <span id="victoryScore">10</span></p>
+        </div>
+    </div>
+
+    <!-- Leaderboard Modal -->
+    <div class="leaderboard-overlay" id="leaderboardOverlay" role="dialog" aria-labelledby="leaderboardTitle" aria-modal="true">
+        <div class="leaderboard-modal">
+            <div class="leaderboard-header">
+                <h2 id="leaderboardTitle">&#127942; Leaderboard</h2>
+                <button id="closeLeaderboard" class="btn-close" aria-label="Close leaderboard">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="leaderboard-tabs">
+                <button class="lb-tab active" data-diff="all">All</button>
+                <button class="lb-tab" data-diff="easy">Easy</button>
+                <button class="lb-tab" data-diff="medium">Medium</button>
+                <button class="lb-tab" data-diff="hard">Hard</button>
+            </div>
+            <div id="leaderboardList" class="leaderboard-list"></div>
+            <button id="clearLeaderboard" class="btn-clear">Clear Board</button>
         </div>
     </div>
 
