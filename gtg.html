@@ -1,53 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>Guess The Number</title>
-        <meta name="viewport" content="width=device-width,initial-scale=1">
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="style.css">
-    </head>
-
-    <body>
-        <div class="floating-shapes">
-            <div class="shape"></div>
-            <div class="shape"></div>
-            <div class="shape"></div>
-            <div class="shape"></div>
-            <div class="shape"></div>
-        </div>
-        <div class="card">
+<head>
+    <meta charset="utf-8">
+    <title>Guess The Number</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="ambient-glow"></div>
+    
+    <main class="game-container">
+        <header class="game-header">
+            <div class="header-line"></div>
             <h1>Guess The Number</h1>
-            <div class="controls">
-                <div class="stack">
-                    <div class="row">
-                        <input id="guessnumber" type="number" min="1" max="100" placeholder="Enter a number between 1 and 100">
-                        <button id="CheckBtn">Check</button>
-                    </div>
-                    <div class="row">
-                        <select id="difficulty">
-                            <option value="easy">Easy (1-50)</option>
-                            <option value="medium" selected>Medium (1-100)</option>
-                            <option value="hard">Hard (1-200)</option>
-                        </select>
-                        <button id="hintBtn" class="ghost">Hint</button>
-                        <button id="resetBtn" class="ghost">New Game</button>
-                    </div>
+            <p class="tagline">A game of intuition and chance</p>
+        </header>
+
+        <section class="game-board">
+            <div class="difficulty-selector">
+                <label class="label-subtle">Difficulty</label>
+                <div class="segmented-control">
+                    <button class="seg-btn" data-mode="easy">Easy</button>
+                    <button class="seg-btn active" data-mode="medium">Medium</button>
+                    <button class="seg-btn" data-mode="hard">Hard</button>
                 </div>
             </div>
-            <p class="subtitle">Guess The Number. Press <span style="font-weight:700">.</span> to focus the input.</p>
-            <p id="result">Enter a number and press Check.</p>
-            <div class="meta">
-                <div>Range: <strong id="rangelabel">1 - 100</strong> <span class="pill" id="difficultyLabel">Medium</span></div>
-                <div>Attempts left: <strong id="attemptsLeft">10</strong>| Hints left: <strong id="hintsLeft">1</strong></div>
-                <div>Guesses: <div id="guessList" class="list"></div></div>
-            </div>
-            <p id="score">Score: 10</p>
-            <p id="highscore">Best: <span id="bestValue">0</span></p>
-            <svg id="trophy" class="trophy" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="#FFD166" d="M6 2h12v2a4 4 0 0 1-4 4h-4A4 4 0 0 1 6 4V2z"/><path fill="#F4A261" d="M8 8v2a6 6 0 0 0 6 6v4H10v2h4v-2h-4v-4a6 6 0 0 0 6-6V8h-2V8h-2v2a4 4 0 0 1-4 4 4 4 0 0 1-4-4V8H8z"/></svg>
 
+            <div class="range-display">
+                <span class="range-number">1</span>
+                <div class="range-line">
+                    <div class="range-fill"></div>
+                </div>
+                <span class="range-number" id="maxRange">100</span>
+            </div>
+
+            <div class="input-zone">
+                <input 
+                    id="guessnumber" 
+                    type="number" 
+                    min="1" 
+                    max="100" 
+                    placeholder="Enter your guess"
+                    autocomplete="off"
+                    aria-label="Your guess"
+                >
+                <button id="CheckBtn" class="btn-primary">
+                    <span>Reveal</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 16v-4M12 8h.01"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="secondary-actions">
+                <button id="hintBtn" class="btn-ghost">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                    </svg>
+                    <span id="hintsLeft">1</span> Hint
+                </button>
+                <button id="resetBtn" class="btn-ghost">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 12a9 9 0 019-9 9.75 9.75 0 016.74 2.74L21 8"/>
+                        <path d="M21 3v5h-5"/>
+                        <path d="M21 12a9 9 0 01-9 9 9.75 9.75 0 01-6.74-2.74L3 16"/>
+                        <path d="M3 21v-5h5"/>
+                    </svg>
+                    New Game
+                </button>
+            </div>
+        </section>
+
+        <section class="feedback-zone">
+            <div id="result" class="result-message" role="status" aria-live="polite">
+                <span class="result-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                </span>
+                <span class="result-text">Test your intuition</span>
+            </div>
+        </section>
+
+        <section class="stats-zone">
+            <div class="stat-card attempts">
+                <span class="stat-value" id="attemptsLeft">10</span>
+                <span class="stat-label">Chances</span>
+            </div>
+            <div class="stat-card score">
+                <span class="stat-value" id="scoreValue">10</span>
+                <span class="stat-label">Score</span>
+            </div>
+            <div class="stat-card best">
+                <span class="stat-value" id="bestValue">0</span>
+                <span class="stat-label">Best</span>
+            </div>
+        </section>
+
+        <section class="history-zone" id="historyZone">
+            <div class="history-header">
+                <span class="label-subtle">Previous Guesses</span>
+                <span class="history-count" id="historyCount">0</span>
+            </div>
+            <div id="guessList" class="guess-chips"></div>
+        </section>
+
+        <footer class="game-footer">
+            <div class="warmth-indicator" id="warmthIndicator"></div>
+            <p class="hint-text">Press <kbd>.</kbd> to focus input</p>
+        </footer>
+    </main>
+
+    <div class="victory-overlay" id="victoryOverlay">
+        <div class="victory-content">
+            <div class="victory-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+            </div>
+            <h2 class="victory-title">Magnificent</h2>
+            <p class="victory-number">The number was <strong id="victoryNumber">42</strong></p>
+            <p class="victory-score">Final Score: <span id="victoryScore">10</span></p>
         </div>
-        <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-        <script src="script.js"></script>
-    </body>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script src="script.js"></script>
+</body>
 </html>
