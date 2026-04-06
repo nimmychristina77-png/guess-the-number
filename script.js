@@ -229,8 +229,6 @@ function updateRangeFill() {
     const percent = ((rand - 1) / maxRange) * 100;
     setTimeout(() => { rangeFill.style.width = percent + '%'; }, 500);
 }
-
-
 // Update all the visible numbers on screen
 function updateDisplay() {
     maxRangeDisplay.textContent = maxRange;
